@@ -94,10 +94,53 @@ def numberOfPieces(x):
     y = re.sub("[1-8]|\/","",y)
     return len(y)
 
+def fenUpdate(fen, moves):
+    moves = " "+moves+" "
+    fen = re.sub("2","11",fen)
+    fen = re.sub("3","111",fen)
+    fen = re.sub("4","1111",fen)
+    fen = re.sub("5","11111",fen)
+    fen = re.sub("6","111111",fen)
+    fen = re.sub("7","1111111",fen)
+    fen = re.sub("8","11111111",fen)
+    color = fen[73]
+    fen = fen[0:71]
+    for i in range(len(moves)-4):
+        if(moves[i]==" "):
+            if(moves[i+5]==" "):
+                fen = doMove(fen,moves[i+1:i+5])
+            elif(moves[i+5]==" "):
+                fen = doMove(fen,moves[i+1:i+6])
+    if color == "w":
+        fen = fen+" b - - 0 1"
+    else:
+        fen = fen+" w - - 0 1"
+    fen = re.sub("11111111","8",fen)
+    fen = re.sub("1111111","7",fen)
+    fen = re.sub("111111","6",fen)
+    fen = re.sub("11111","5",fen)
+    fen = re.sub("1111","4",fen)
+    fen = re.sub("111","3",fen)
+    fen = re.sub("11","2",fen)
+    return fen
 
-
-
-
+def doMove(board, move):
+    print(move)
+    fromSquare = move[0:2]
+    toSquare = move[2:4]
+    fromSquare = (ord(fromSquare[0])-96)+9*(8-int(fromSquare[1]))-1
+    toSquare = (ord(toSquare[0])-96)+9*(8-int(toSquare[1]))-1
+    promotion = None
+    if len(move)>4:
+        promotion = move[4]
+    piece = board[fromSquare]
+    board = board[:fromSquare]+"1"+board[fromSquare+1:]
+    if promotion == None:
+        board = board[:toSquare]+piece+board[toSquare+1:]
+    else:
+        board = board[:toSquare]+promotion+board[toSquare+1:]
+    return board
+    
 
 main()
 '''
